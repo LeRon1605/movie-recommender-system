@@ -9,7 +9,7 @@ import csv
 
 csv_path = './dataset/rating.csv'
 df = pd.read_csv('./dataset/movie.csv')
-current_movie_index = 370
+current_movie_index = 0
 number_of_thread = 20
 number_of_review_per_page = 25
 number_of_review_per_movie = 300
