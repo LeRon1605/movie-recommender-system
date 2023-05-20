@@ -5,8 +5,17 @@ from MatrixFactorization import MatrixFactorizationRecommenderSystem
 
 app = Flask(__name__)
 
+@app.after_request 
+def after_request(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    header['Access-Control-Allow-Headers'] = '*'
+    header['Access-Control-Allow-Methods'] = '*'
+    # Other headers can be added here if needed
+    return response
+
+
 matrix_factorization_rs = MatrixFactorizationRecommenderSystem()
-matrix_factorization_rs.fit(100, 0.01, 0.2)
 
 def fit_matrix():
     print('Begin fit matrix')
@@ -92,3 +101,4 @@ def recommend():
 
 if __name__ == '__main__':
     app.run()
+    matrix_factorization_rs.fit(100, 0.01, 0.2)
