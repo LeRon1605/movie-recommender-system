@@ -2,10 +2,12 @@ from flask import Flask, request, make_response, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 from utils import get_user_by_username, is_user_exist, create_user, is_movie_exist, insert_rate
 from MatrixFactorization import MatrixFactorizationRecommenderSystem
+from ContentBased import ContentBased
 
 app = Flask(__name__)
 
 matrix_factorization_rs = MatrixFactorizationRecommenderSystem()
+content_based_model = ContentBased()
 matrix_factorization_rs.fit(100, 0.01, 0.2)
 
 def fit_matrix():
@@ -31,7 +33,8 @@ def login():
         response.set_cookie('username', str(username))
 
         return jsonify({
-            'message': 'Login successfully',
+            'user_id': str(user_id),
+            'username': str(username)
         }), 200
     else:
         return jsonify({
@@ -57,10 +60,10 @@ def register():
 
 @app.route('/rate', methods = ['POST'])
 def rate():
-    user_id = request.cookies.get('user_id')
+    data = request.get_json()
+    user_id = data['user_id']
 
     if user_id:
-        data = request.get_json()
         movie_id = data['movie_id']
         rate = data['rate']
 
@@ -78,17 +81,24 @@ def rate():
             'message': 'Please login',
         }), 401
 
-@app.route('/recommend', methods = ['GET'])
+@app.route('/matrix-factorization', methods = ['GET'])
 def recommend():
-    user_id = request.cookies.get('user_id')
+    data = request.get_json()
+    user_id = data['user_id']
 
     if user_id:
-        result = matrix_factorization_rs.recommend_matrix_factorization_with_bias(user_id)
-        return jsonify(matrix_factorization_rs.recommend_matrix_factorization_with_bias(user_id)), 200
+        return jsonify(matrix_factorization_rs.recommend_matrix_factorization_with_bias(user_id, 20)), 200
     else:
         return jsonify({
             'message': 'Please login',
         }), 401
+    
+@app.route('/content-based', methods = ['GET'])
+def recommend_content_based():
+    data = request.get_json()
+    movie_id = data['movie_id']
+    result = content_based_model.recommend(movie_id)
+    return jsonify(result), 200
 
 if __name__ == '__main__':
     app.run()
