@@ -60,6 +60,26 @@ def get_movie_name(movie_id):
         return (movie.values[0][0], movie.values[0][1], movie.values[0][2])
     else:
         return (None, None)
+    
+def get_movies():
+    movies = []
+    for row in df_movie.values:
+        id, name, poster, directors, writers, genres, actors, releaseYear, limit, duration, language, origin = row
+        movies.append({
+            'id': id,
+            'name': name,
+            'poster': poster,
+            'directors': directors,
+            'genres': genres,
+            'actors': actors,
+            'releaseYear': releaseYear,
+            'limit': limit,
+            'duration': duration,
+            'writers': writers,
+            'language': language,
+            'origin': origin
+        })
+    return movies
 
 def get_recommend(user_id):
     pass

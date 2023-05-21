@@ -1,6 +1,6 @@
 from flask import Flask, request, make_response, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
-from utils import get_user_by_username, is_user_exist, create_user, is_movie_exist, insert_rate
+from utils import get_user_by_username, is_user_exist, create_user, is_movie_exist, insert_rate, get_movies
 from MatrixFactorization import MatrixFactorizationRecommenderSystem
 from ContentBased import ContentBased
 
@@ -17,14 +17,14 @@ def after_request(response):
 
 
 matrix_factorization_rs = MatrixFactorizationRecommenderSystem()
-
+content_based_model = ContentBased()
 def fit_matrix():
     print('Begin fit matrix')
     matrix_factorization_rs.fit(100, 0.01, 0.2)
     print('End fit matrix')
 
 scheduler = BackgroundScheduler(daemon=True)
-scheduler.add_job(fit_matrix, 'interval', seconds = 5 * 60)
+scheduler.add_job(fit_matrix, 'interval', seconds = 3 * 60)
 scheduler.start()
 
 @app.route('/login', methods = ['POST'])
@@ -95,18 +95,24 @@ def recommend():
     user_id = data['user_id']
 
     if user_id:
-        return jsonify(matrix_factorization_rs.recommend_matrix_factorization_with_bias(user_id, 20)), 200
+        return jsonify(matrix_factorization_rs.recommend_matrix_factorization_with_bias(user_id, 12)), 200
     else:
         return jsonify({
             'message': 'Please login',
         }), 401
     
-@app.route('/content-based', methods = ['GET'])
+@app.route('/content-based', methods = ['POST'])
 def recommend_content_based():
     data = request.get_json()
     movie_id = data['movie_id']
     result = content_based_model.recommend(movie_id)
     return jsonify(result), 200
+
+@app.route('/movies', methods = ['GET'])
+def get_all_movies():
+    result = get_movies()
+    return jsonify(result), 200
+
 
 if __name__ == '__main__':
     matrix_factorization_rs.fit(100, 0.01, 0.2)
