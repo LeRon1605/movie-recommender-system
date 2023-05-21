@@ -1,17 +1,26 @@
 import pandas as pd
 import numpy as np
 import math
+from ContentBased import ContentBased
 from utils import get_movie_name
 
 from sortedcontainers import SortedList
 class MatrixFactorizationRecommenderSystem:
     def __init__(self):
         self.df = pd.read_csv('../dataset/rating_final.csv')
+        self.contentBasedModel = ContentBased()  
         self.user_to_movie = {}
         self.movie_to_user = {}
         self.movie_user_rating = {}
         self.bias_movie = {}
         self.bias_user = {}
+
+        df_user = pd.read_csv('../dataset/user_final.csv')
+
+        for row in df_user.values:
+            id, _ = row
+            self.user_to_movie[id] = []
+            self.bias_user[id] = 0
 
         for row in self.df.values:
             movie_id, user_id, rate = row
@@ -58,6 +67,13 @@ class MatrixFactorizationRecommenderSystem:
         self.movie_user_rating = {}
         self.bias_movie = {}
         self.bias_user = {}
+
+        df_user = pd.read_csv('../dataset/user_final.csv')
+
+        for row in df_user.values:
+            id, _ = row
+            self.user_to_movie[id] = []
+            self.bias_user[id] = 0
 
         for row in self.df.values:
             movie_id, user_id, rate = row
@@ -142,10 +158,17 @@ class MatrixFactorizationRecommenderSystem:
     
     def recommend_matrix_factorization_with_bias(self, user_id, n = 10):
         recommend_list = SortedList()
+        
         for movie_id in self.movie_to_user.keys():
             if (movie_id, user_id) not in self.movie_user_rating:
                 rating = self.get_rating_with_bias(user_id, movie_id)
-                recommend_list.add((rating, get_movie_name(movie_id)))
+                sim = []
+                for movie_id_user_rated in self.user_to_movie[user_id]:
+                    sim.append(self.contentBasedModel.get_movie_similarities(movie_id_user_rated, movie_id))
+
+
+
+                recommend_list.add((np.mean(sim) * rating, get_movie_name(movie_id)))
                 if len(recommend_list) > n:
                     del recommend_list[0]
 
@@ -154,7 +177,7 @@ class MatrixFactorizationRecommenderSystem:
             result.append({
                 'id': movie_id,
                 'name': movie_name,
-                'score': score,
+                'score': round(score, 2),
                 'poster': movie_poster
             })
         return result

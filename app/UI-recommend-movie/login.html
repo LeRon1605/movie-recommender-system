@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/charts.css/dist/charts.min.css">
+</head>
+
+<body>
+    <div class="bg-zinc-50 w-full">
+        <div class="flex min-h-screen flex-col items-center pt-6 sm:justify-center sm:pt-0">
+            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg overflow-hidden w-full p-8 sm:max-w-md">
+                <form class="mt-4" id="login-form">
+                    <input type="hidden" name="_token" value="GhpGn48rFRsMAQKf8HQEOWZsRb9F8VJQwwAQs6Ck" />
+                    <div>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-gray-400" for="username"> User
+                            Name
+                        </label>
+
+                        <input
+                            class="inline-block w-full py-2 rounded-md dark:text-gray-400 bg-gray-100 dark:bg-gray-900 border-transparent dark:border-gray-700 dark:hover:border-gray-700 dark:hover:focus:border-gray-700 focus:border-gray-300 hover:focus:border-gray-700 hover:border-gray-300 hover:focus:border-gray-300 focus:ring-0 text-sm mt-1 block w-full"
+                            id="username" type="text" name="username" placeholder="Enter username" required="required"
+                            autofocus="autofocus" />
+                    </div>
+
+                    <div class="mt-4 flex items-center justify-end">
+                        <button type="submit"
+                            class="inline-flex items-center p-2 rounded-lg text-gray-800 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-800 text-xs font-bold ml-3">Log
+                            in</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="./assets/js/login.js"></script>
+
+</html>
