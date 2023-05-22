@@ -73,7 +73,7 @@ window.addEventListener("load", () => {
     })
         .then((res) => res.json())
         .then((data) => {
-            root.innerHTML = render(data);
+            root.innerHTML = render(data.reverse());
         })
         .catch((error) => console.log(error));
 });

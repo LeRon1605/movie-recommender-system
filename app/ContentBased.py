@@ -121,7 +121,7 @@ class ContentBased:
         return sim_director + sim_genre + sim_actor + sim_releaseYear + sim_duration + sim_limit + sim_writer + sim_language + sim_origin
 
     def recommend(self, movie_id):
-        k = 12
+        k = 24
         list = SortedList()
         for id in self.movies.keys():
             if (id == movie_id):
@@ -137,7 +137,7 @@ class ContentBased:
                 'id': id,
                 'name': self.movies[id]['name'],
                 'poster': self.movies[id]['poster'],
-                'score': score
+                'score': round(score, 2)
             })
 
         return result
