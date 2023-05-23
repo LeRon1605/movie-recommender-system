@@ -47,7 +47,7 @@ const renderNotModal = (data) => {
 };
 
 window.addEventListener("load", () => {
-    fetch("http://127.0.0.1:5000/movies")
+    fetch("http://167.172.93.75:7000/movies")
         .then((res) => res.json())
         .then((data) => {
             console.log(data);
@@ -66,7 +66,7 @@ window.addEventListener("load", () => {
             });
         });
 
-    fetch("http://127.0.0.1:5000/matrix-factorization", {
+    fetch("http://167.172.93.75:7000/matrix-factorization", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -80,7 +80,7 @@ window.addEventListener("load", () => {
         })
         .catch((error) => console.log(error));
 
-    fetch("http://127.0.0.1:5000/item-based", {
+    fetch("http://167.172.93.75:7000/item-based", {
             method: "POST",
             mode: "cors",
             headers: {
@@ -101,7 +101,7 @@ const getRelatedMovie = (item) => {
     modalName.innerText = item.name;
 
     modalId.value = item.id;
-    fetch("http://127.0.0.1:5000/content-based", {
+    fetch("http://167.172.93.75:7000/content-based", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -118,13 +118,13 @@ const getRelatedMovie = (item) => {
 const logout = document.getElementById("logout");
 
 logout.addEventListener("click", () => {
-    window.location = "http://127.0.0.1:5500/app/UI-recommend-movie/login.html";
+    window.location = "/app/UI-recommend-movie/login.html";
 });
 
 modalForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    fetch("http://127.0.0.1:5000/rate", {
+    fetch("http://167.172.93.75:7000/rate", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -135,5 +135,7 @@ modalForm.addEventListener("submit", (e) => {
             rate: modalRate.value,
             user_id: localStorage.getItem("user_id"),
         }),
+    }).then(e => {
+        alert('Đánh giá thành công');
     });
 });
