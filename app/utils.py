@@ -69,15 +69,6 @@ def get_movies():
             'id': id,
             'name': name,
             'poster': poster,
-            'directors': directors,
-            'genres': genres,
-            'actors': actors,
-            'releaseYear': releaseYear,
-            'limit': limit,
-            'duration': duration,
-            'writers': writers,
-            'language': language,
-            'origin': origin
         })
     return movies
 

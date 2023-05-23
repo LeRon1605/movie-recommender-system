@@ -15,7 +15,7 @@ loginForm.addEventListener("submit", (e) => {
         .then((res) => res.json())
         .then((data) => {
             localStorage.setItem("user_id", data.user_id);
+            window.location = "http://127.0.0.1:5500/app/UI-recommend-movie";
         })
         .catch((error) => console.log(error));
-    window.location = "http://127.0.0.1:5500/app/UI-recommend-movie";
 });

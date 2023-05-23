@@ -115,5 +115,5 @@ def get_all_movies():
 
 
 if __name__ == '__main__':
-    matrix_factorization_rs.fit(100, 0.01, 0.2)
+    matrix_factorization_rs.fit(5, 0.01, 0.2)
     app.run()
