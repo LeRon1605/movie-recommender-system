@@ -42,7 +42,7 @@ def insert_rate(user_id, movie_id, rate_score):
     rate = df_rating[(df_rating['movie_id'] == movie_id) & (df_rating['user_id'] == user_id)]
 
     if len(rate) > 0:
-        df_rating.loc[(df_rating['movie_id'] == movie_id) & (df_rating['user_id'] == user_id, 'rate')] = rate
+        df_rating.loc[(df_rating['movie_id'] == movie_id) & (df_rating['user_id'] == user_id, 'rate')]['rate'] = rate
         df_rating.to_csv(rating_csv_path, index = False)
     else:
         rating = {

@@ -3,6 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from utils import get_user_by_username, is_user_exist, create_user, is_movie_exist, insert_rate, get_movies
 from MatrixFactorization import MatrixFactorizationRecommenderSystem
 from ContentBased import ContentBased
+from ItemBased import ItemBased
 
 app = Flask(__name__)
 
@@ -18,9 +19,11 @@ def after_request(response):
 
 matrix_factorization_rs = MatrixFactorizationRecommenderSystem()
 content_based_model = ContentBased()
+item_based_model = ItemBased()
 def fit_matrix():
     print('Begin fit matrix')
     matrix_factorization_rs.fit(100, 0.01, 0.2)
+    item_based_model.fit()
     print('End fit matrix')
 
 scheduler = BackgroundScheduler(daemon=True)
@@ -111,7 +114,15 @@ def get_all_movies():
     result = get_movies()
     return jsonify(result), 200
 
+@app.route('/item-based', methods = ['POST'])
+def recommend_item_based():
+    data = request.get_json()
+    user_id = data['user_id']
+    result = item_based_model.recommend(user_id)
+    return jsonify(result), 200
+
 
 if __name__ == '__main__':
     matrix_factorization_rs.fit(100, 0.01, 0.2)
+    item_based_model.fit()
     app.run()

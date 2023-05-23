@@ -1,5 +1,6 @@
 const root = document.getElementById("root");
 const root1 = document.getElementById('root1');
+const root2 = document.getElementById('root2');
 const root3 = document.getElementById('root3');
 const searchField = document.getElementById('search-field');
 let movies = null;
@@ -76,6 +77,20 @@ window.addEventListener("load", () => {
             root.innerHTML = render(data.reverse());
         })
         .catch((error) => console.log(error));
+
+    fetch("http://127.0.0.1:5000/item-based", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user_id: localStorage.getItem("user_id") }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                root2.innerHTML = render(data.reverse());
+            })
+            .catch((error) => console.log(error));
 });
 
 const getRelatedMovie = (item) => {

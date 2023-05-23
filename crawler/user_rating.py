@@ -9,14 +9,14 @@ import csv
 import numpy as np
 
 csv_path = './dataset/rating.csv'
-df = pd.read_csv('./dataset/rating_clean.csv')
+df = pd.read_csv('./dataset/rating_final.csv')
 df1 = pd.read_csv('./dataset/rating.csv')
 users1 = set(df['user_id'].unique())
 users2 = set(df1['user_id'].unique())
 users = list(users2.difference(users1))
 movies = df['movie_id'].unique()
 
-current_user_index = 230
+current_user_index = 0
 number_of_thread = 5
 number_of_review_per_page = 100
 number_of_review_per_user = 300
@@ -35,7 +35,6 @@ def thread_handler(url):
     data = []
     
     edge_option = Options()
-    edge_option.add_argument("--headless")
     
     driver = webdriver.Edge(options=edge_option)
     driver.get(url)
@@ -71,6 +70,7 @@ def thread_handler(url):
 
                         if movie_id in movies and ((user_id + movie_id) not in rating_df['composite']):
                             data.append([movie_id, user_id, rating])
+                            print('Data: ', [movie_id, user_id, rating])
                             new_row_count += 1
                     except Exception as e:
                         continue
@@ -87,6 +87,8 @@ def thread_handler(url):
         writer = csv.writer(f)
         for row in data:
             writer.writerow(row)
+
+    time.sleep(5)
 
     if current_user_index < len(users):
         current_user_index += 1

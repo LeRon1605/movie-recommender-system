@@ -10,7 +10,7 @@ import csv
 csv_path = './dataset/rating.csv'
 df = pd.read_csv('./dataset/movie.csv')
 current_movie_index = 0
-number_of_thread = 20
+number_of_thread = 5
 number_of_review_per_page = 25
 number_of_review_per_movie = 300
 
@@ -31,7 +31,7 @@ def thread_handler(url):
     data = []
     
     edge_option = Options()
-    edge_option.add_argument("--headless")
+    # edge_option.add_argument("--headless")
     
     driver = webdriver.Edge(options=edge_option)
     driver.get(url)
@@ -69,6 +69,7 @@ def thread_handler(url):
 
             if (user_id + movie_id) not in rating_df['composite']:
                 data.append([movie_id, user_id, rating])
+                print('Data: ', [movie_id, user_id, rating])
                 new_row_count += 1
         except Exception as e:
             continue
@@ -84,9 +85,12 @@ def thread_handler(url):
         current_movie_index += 1
         th = threading.Thread(target=thread_handler, args=[get_url(current_movie_index)])
         th.start()
+
+    time.sleep(10)
         
     driver.quit()
 
 for i in range(0, number_of_thread):
     th = threading.Thread(target=thread_handler, args=[get_url(current_movie_index)])
+    current_movie_index += 1
     th.start()

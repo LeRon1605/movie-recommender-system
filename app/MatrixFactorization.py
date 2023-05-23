@@ -14,6 +14,7 @@ class MatrixFactorizationRecommenderSystem:
         self.movie_user_rating = {}
         self.bias_movie = {}
         self.bias_user = {}
+        self.recommend_history = {}
 
         df_user = pd.read_csv('../dataset/user_final.csv')
 
@@ -54,11 +55,11 @@ class MatrixFactorizationRecommenderSystem:
         self.W = dict.fromkeys(self.user_to_movie.keys())
         self.U = dict.fromkeys(self.movie_to_user.keys())
 
-        self.saved_average = self.average
-        self.saved_bias_movie = self.bias_movie
-        self.saved_bias_user = self.bias_user
-        self.saved_w = self.W
-        self.saved_u = self.U
+        self.saved_average = np.copy(self.average)
+        self.saved_bias_movie = self.bias_movie.copy()
+        self.saved_bias_user = self.bias_user.copy()
+        self.saved_w = self.W.copy()
+        self.saved_u = self.U.copy()
     
     def dump(self):
         self.df = pd.read_csv('../dataset/rating_final.csv')
@@ -108,11 +109,11 @@ class MatrixFactorizationRecommenderSystem:
         for movie_id in self.U.keys():
             self.U[movie_id] = np.random.randn(self.k)
 
-        self.saved_average = self.average
-        self.saved_bias_movie = self.bias_movie
-        self.saved_bias_user = self.bias_user
-        self.saved_w = self.W
-        self.saved_u = self.U
+        self.saved_average = np.copy(self.average)
+        self.saved_bias_movie = self.bias_movie.copy()
+        self.saved_bias_user = self.bias_user.copy()
+        self.saved_w = self.W.copy()
+        self.saved_u = self.U.copy()
 
     def fit(self, epoch, learning_rate, weight):
         self.dump()
@@ -152,6 +153,8 @@ class MatrixFactorizationRecommenderSystem:
         self.saved_bias_user = self.bias_user
         self.saved_w = self.W
         self.saved_u = self.U
+        
+        self.recommend_history = {}
 
     def get_rating_with_bias(self, user_id, movie_id):
         return np.dot(self.saved_w[user_id], self.saved_u[movie_id]) + self.saved_average + self.saved_bias_movie[movie_id] + self.saved_bias_user[user_id]
@@ -166,18 +169,25 @@ class MatrixFactorizationRecommenderSystem:
                 for movie_id_user_rated in self.user_to_movie[user_id]:
                     sim.append(self.contentBasedModel.get_movie_similarities(movie_id_user_rated, movie_id))
 
+                adjust = 0
+                if (user_id, movie_id) in self.recommend_history:
+                    adjust = self.recommend_history[(user_id, movie_id)] * 0.3
 
-
-                recommend_list.add((np.mean(sim) * rating, get_movie_name(movie_id)))
+                recommend_list.add((np.mean(sim) * rating - adjust, get_movie_name(movie_id)))
                 if len(recommend_list) > n:
                     del recommend_list[0]
 
         result = []
         for score, (movie_id, movie_name, movie_poster) in list(recommend_list):
+            if (user_id, movie_id) in self.recommend_history:
+                self.recommend_history[(user_id, movie_id)] += 1
+            else:
+                self.recommend_history[(user_id, movie_id)] = 0
             result.append({
                 'id': movie_id,
                 'name': movie_name,
                 'score': round(score, 2),
                 'poster': movie_poster
             })
+        
         return result
