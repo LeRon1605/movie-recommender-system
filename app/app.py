@@ -51,8 +51,6 @@ def login():
     
 @app.route('/register', methods = ['POST'])
 def register():
-    response = make_response()
-
     data = request.get_json()
     username = data['username']
 
@@ -95,7 +93,7 @@ def recommend():
     user_id = data['user_id']
 
     if user_id:
-        return jsonify(matrix_factorization_rs.recommend_matrix_factorization_with_bias(user_id, 12)), 200
+        return jsonify(matrix_factorization_rs.recommend_matrix_factorization_with_bias(user_id, 24)), 200
     else:
         return jsonify({
             'message': 'Please login',
