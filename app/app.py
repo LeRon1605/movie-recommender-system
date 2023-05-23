@@ -48,9 +48,11 @@ def login():
             'username': str(username)
         }), 200
     else:
+        user = create_user(data['username'])
         return jsonify({
-            'message': 'Username does not exist.',
-        }), 404
+            'user_id': user['id'],
+            'username': user['username']
+        }), 200
     
 @app.route('/register', methods = ['POST'])
 def register():
@@ -62,9 +64,10 @@ def register():
             'message': 'Username already exist',
         }), 400
     else:
-        create_user(username)
+        user = create_user(username)
         return jsonify({
-            'message': 'Register account successfully',
+            'user_id': user['id'],
+            'username': user['username']
         }), 200
 
 @app.route('/rate', methods = ['POST'])
@@ -123,6 +126,6 @@ def recommend_item_based():
 
 
 if __name__ == '__main__':
-    matrix_factorization_rs.fit(100, 0.01, 0.2)
+    matrix_factorization_rs.fit(5, 0.01, 0.2)
     item_based_model.fit()
-    app.run()
+    app.run(host="0.0.0.0", port=5000)

@@ -1,14 +1,8 @@
 const root = document.getElementById("root");
-<<<<<<< HEAD
 const root1 = document.getElementById('root1');
 const root2 = document.getElementById('root2');
 const root3 = document.getElementById('root3');
 const searchField = document.getElementById('search-field');
-=======
-const root1 = document.getElementById("root1");
-const root3 = document.getElementById("root3");
-const searchField = document.getElementById("search-field");
->>>>>>> ae7fe81bfd0954fb716c359dd88d2a935c2c2b1d
 let movies = null;
 const modalImage = document.getElementById("modal-image");
 const modalName = document.getElementById("modal-name");

@@ -22,7 +22,7 @@ def is_user_exist(username):
 
 def create_user(username):
     df_user = pd.read_csv(user_csv_path)
-    
+
     user = {
         'id': uuid.uuid1().hex,
         'username': username
@@ -30,6 +30,8 @@ def create_user(username):
 
     df_user = df_user.append(user, ignore_index = True)
     df_user.to_csv(user_csv_path, index = False)
+
+    return user
 
 def is_movie_exist(movie_id):
     df_user = pd.read_csv(movie_csv_path)

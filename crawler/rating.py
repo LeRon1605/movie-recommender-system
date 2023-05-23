@@ -8,7 +8,7 @@ import threading
 import csv
 
 csv_path = './dataset/rating.csv'
-df = pd.read_csv('./dataset/movie.csv')
+df = pd.read_csv('./dataset/movie_final.csv')
 current_movie_index = 0
 number_of_thread = 5
 number_of_review_per_page = 25
@@ -31,7 +31,7 @@ def thread_handler(url):
     data = []
     
     edge_option = Options()
-    # edge_option.add_argument("--headless")
+    edge_option.add_argument("--headless")
     
     driver = webdriver.Edge(options=edge_option)
     driver.get(url)

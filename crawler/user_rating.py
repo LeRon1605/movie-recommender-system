@@ -35,7 +35,7 @@ def thread_handler(url):
     data = []
     
     edge_option = Options()
-    
+    edge_option.add_argument("--headless")
     driver = webdriver.Edge(options=edge_option)
     driver.get(url)
 
@@ -61,7 +61,7 @@ def thread_handler(url):
                 for row in rating_list_element:
                     try:
                         movie_element = row.find_element(By.CLASS_NAME, 'lister-item-header').find_element(By.TAG_NAME, 'a')
-                        rating_element = row.find_element(By.CLASS_NAME, 'ipl-rating-star__rating')
+                        rating_element = row.find_elements(By.CLASS_NAME, 'ipl-rating-star__rating')[1]
 
                         user_id = users[current_user_index]
                         movie_url = movie_element.get_attribute('href')[0:movie_element.get_attribute('href').index('?') - 1]
