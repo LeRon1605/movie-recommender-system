@@ -5,16 +5,6 @@ class ContentBased:
     def __init__(self):
         df = pd.read_csv('../dataset/movie_final.csv')
 
-        for i in range(0, len(df)):
-            time = df['duration'][i]
-            try:
-                df['duration'][i] = int(time[:time.index('h')]) * 60
-            except:
-                df['duration'][i] = int(time[:time.index('m')])
-
-            if len(time.split(' ')) > 1:
-                df['duration'][i] += int(time.split(' ')[1][:time.split(' ')[1].index('m')])
-
         self.movies = {}
         for row in df.values:
             id, name, poster, directors, writers, genres, actors, releaseYear, limit, duration, language, origin = row
