@@ -118,7 +118,7 @@ const getRelatedMovie = (item) => {
 const logout = document.getElementById("logout");
 
 logout.addEventListener("click", () => {
-    window.location = "/app/UI-recommend-movie/login.html";
+    window.location = "/movie-recommender-system/app/UI-recommend-movie/login.html";
 });
 
 modalForm.addEventListener("submit", (e) => {
